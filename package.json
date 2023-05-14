@@ -1,0 +1,13 @@
+{
+    "name": "com.dcfa_pixels.notes",
+    "author": "DCFApixels",
+    "displayName": "Notes",
+    "description": "",
+    "unity": "2020.3",
+    "version": "1.0.0",
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": ""
+    }
+}
