@@ -19,7 +19,7 @@ namespace DCFApixels.Notes
         private void OnDrawGizmos()
         {
             if (!_drawIcon) return;
-            Gizmos.DrawIcon(transform.position, "Note Icon.png", false, _color);
+            Gizmos.DrawIcon(transform.position, "Runtime/Note Icon.png", false, _color);
         }
 #endif
     }
