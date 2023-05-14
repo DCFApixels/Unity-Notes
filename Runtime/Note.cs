@@ -24,7 +24,7 @@ namespace DCFApixels.Notes
 
             var assembly = Assembly.GetExecutingAssembly();
             var packagePath = PackageInfo.FindForAssembly(assembly).assetPath;
-            Gizmos.DrawIcon(transform.position, packagePath + "Runtime/Note Icon.png", false, _color);
+            Gizmos.DrawIcon(transform.position, packagePath + "/Runtime/Note Icon.png", false, _color);
         }
 #endif
     }
