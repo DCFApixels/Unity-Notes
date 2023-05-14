@@ -32,15 +32,16 @@ namespace DCFApixels.Notes.Editors
                 Gizmos.DrawIcon(note.transform.position, packagePath + "/Gizmos/Runtime/Note Icon.png", false, note.Color);
             }
 
-            string sceneNote = GetSceneNote(note.Text);
+            string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
             Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
         }
 
-        private static string GetSceneNote(string fullNote)
+        private static string GetSceneNote(string fullNote, bool isNeedSpacing)
         {
             int index = fullNote.IndexOf(NOTE_SEPARATOR);
             if (index < 0) return string.Empty;
-            return fullNote.Substring(0, index);
+            string result = fullNote.Substring(0, index);
+            return isNeedSpacing ? "\r\n" + result : result;
         }
     }
     [CustomEditor(typeof(Note))]
