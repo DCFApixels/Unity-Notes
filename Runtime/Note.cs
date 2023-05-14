@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DCFApixels.Notes
 {
     [AddComponentMenu("Note", 30)]
-    public class Note : MonoBehaviour
+    internal class Note : MonoBehaviour
     {
 #if UNITY_EDITOR
         [SerializeField]
@@ -24,6 +24,17 @@ namespace DCFApixels.Notes
                 return _drawIcon;
 #else
                 return false;
+#endif
+            }
+        }
+        public string Text
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return _note;
+#else
+                return string.Empty;
 #endif
             }
         }

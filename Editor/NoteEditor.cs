@@ -4,7 +4,15 @@ using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
 {
-    public static class NoteUtils
+    using static NoteConsts;
+    using static UnityEditor.PlayerSettings;
+    using static UnityEngine.GraphicsBuffer;
+
+    internal static class NoteConsts
+    {
+        public const string NOTE_SEPARATOR = ">-<";
+    }
+    internal static class NoteUtils
     {
         [MenuItem("GameObject/Create Note")]
         public static void CreateNote(MenuCommand menuCommand)
@@ -19,19 +27,34 @@ namespace DCFApixels.Notes.Editors
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
         public static void DrawNote(Note note, GizmoType gizmoType)
         {
+            string sceneNote = GetSceneNote(note.Text);
+            Color defaultColor = GUI.color;
+            GUI.color = note.Color;
+            Handles.Label(note.transform.position, sceneNote, EditorStyles.boldLabel);
+            GUI.color = defaultColor;
+
             if (!note.DrawIcon) return;
 
             var assembly = Assembly.GetExecutingAssembly();
             var packagePath = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly).assetPath;
             Gizmos.DrawIcon(note.transform.position, packagePath + "/Gizmos/Runtime/Note Icon.png", false, note.Color);
         }
+
+        private static string GetSceneNote(string fullNote)
+        {
+            int index = fullNote.IndexOf(NOTE_SEPARATOR);
+            if (index < 0) return string.Empty;
+            return fullNote.Substring(0, index);
+        }
     }
     [CustomEditor(typeof(Note))]
-    public class NoteEditor : Editor
+    internal class NoteEditor : Editor
     {
         private Rect rect = new Rect();
         private Texture2D _lineTex;
         private bool _IsInit = false;
+
+        private Note Target => target as Note;
 
         private void Init()
         {
@@ -44,19 +67,21 @@ namespace DCFApixels.Notes.Editors
         {
             Init();
             Color defaultColor = GUI.color;
+            Color defaultBackgroundColor = GUI.backgroundColor;
+
             EditorGUI.BeginChangeCheck();
             SerializedProperty heightProp = serializedObject.FindProperty("_height");
             SerializedProperty noteProp = serializedObject.FindProperty("_note");
             SerializedProperty colorProp = serializedObject.FindProperty("_color");
             SerializedProperty drawIconProp = serializedObject.FindProperty("_drawIcon");
 
-            Color defaultcolor = GUI.backgroundColor;
-            Color.RGBToHSV(colorProp.colorValue, out float H, out float S, out float V);
-            S -= S * 0.62f;
-            Color elemcolor = Color.HSVToRGB(H, S, V) * 3f;
+
+            Color color = colorProp.colorValue;
+
+            Color elemcolor = NormalizeBackgroundColor(color);
             rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + heightProp.floatValue + 5);
 
-            EditorGUI.DrawRect(rect, colorProp.colorValue);
+            EditorGUI.DrawRect(rect, color);
 
             GUI.backgroundColor = elemcolor;
 
@@ -94,7 +119,7 @@ namespace DCFApixels.Notes.Editors
             GUILayout.Box(_lineTex, GUILayout.Height(1), GUILayout.ExpandWidth(true));
 
             noteProp.stringValue = EditorGUILayout.TextArea(noteProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
-            GUI.backgroundColor = defaultcolor;
+            GUI.backgroundColor = defaultBackgroundColor;
 
             serializedObject.ApplyModifiedProperties();
             EditorGUI.EndChangeCheck();
@@ -104,7 +129,12 @@ namespace DCFApixels.Notes.Editors
             rect = previewArea;
             base.DrawPreview(previewArea);
         }
-
+        private static Color NormalizeBackgroundColor(Color color)
+        {
+            Color.RGBToHSV(color, out float H, out float S, out float V);
+            S -= S * 0.62f;
+            return Color.HSVToRGB(H, S, V) * 3f;
+        }
         private static Texture2D CreateTexture(int width, int height, Color32 color32)
         {
             var pixels = new Color32[width * height];
