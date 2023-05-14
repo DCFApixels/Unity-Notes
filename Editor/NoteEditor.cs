@@ -25,17 +25,18 @@ namespace DCFApixels.Notes.Editors
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
         public static void DrawNote(Note note, GizmoType gizmoType)
         {
+            if (note.DrawIcon)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var packagePath = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly).assetPath;
+                Gizmos.DrawIcon(note.transform.position, packagePath + "/Gizmos/Runtime/Note Icon.png", false, note.Color);
+            }
+
             string sceneNote = GetSceneNote(note.Text);
             Color defaultColor = GUI.color;
             GUI.color = note.Color;
             Handles.Label(note.transform.position, sceneNote, EditorStyles.boldLabel);
             GUI.color = defaultColor;
-
-            if (!note.DrawIcon) return;
-
-            var assembly = Assembly.GetExecutingAssembly();
-            var packagePath = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly).assetPath;
-            Gizmos.DrawIcon(note.transform.position, packagePath + "/Gizmos/Runtime/Note Icon.png", false, note.Color);
         }
 
         private static string GetSceneNote(string fullNote)
