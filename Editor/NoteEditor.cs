@@ -33,10 +33,7 @@ namespace DCFApixels.Notes.Editors
             }
 
             string sceneNote = GetSceneNote(note.Text);
-            Color defaultColor = GUI.color;
-            GUI.color = note.Color;
-            Handles.Label(note.transform.position, sceneNote, EditorStyles.boldLabel);
-            GUI.color = defaultColor;
+            Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
         }
 
         private static string GetSceneNote(string fullNote)
