@@ -5,8 +5,6 @@ using UnityEngine;
 namespace DCFApixels.Notes.Editors
 {
     using static NoteConsts;
-    using static UnityEditor.PlayerSettings;
-    using static UnityEngine.GraphicsBuffer;
 
     internal static class NoteConsts
     {
@@ -71,10 +69,9 @@ namespace DCFApixels.Notes.Editors
 
             EditorGUI.BeginChangeCheck();
             SerializedProperty heightProp = serializedObject.FindProperty("_height");
-            SerializedProperty noteProp = serializedObject.FindProperty("_note");
+            SerializedProperty textProp = serializedObject.FindProperty("_text");
             SerializedProperty colorProp = serializedObject.FindProperty("_color");
             SerializedProperty drawIconProp = serializedObject.FindProperty("_drawIcon");
-
 
             Color color = colorProp.colorValue;
 
@@ -118,7 +115,7 @@ namespace DCFApixels.Notes.Editors
 
             GUILayout.Box(_lineTex, GUILayout.Height(1), GUILayout.ExpandWidth(true));
 
-            noteProp.stringValue = EditorGUILayout.TextArea(noteProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
+            textProp.stringValue = EditorGUILayout.TextArea(textProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
             GUI.backgroundColor = defaultBackgroundColor;
 
             serializedObject.ApplyModifiedProperties();
