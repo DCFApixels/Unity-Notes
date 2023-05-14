@@ -1,4 +1,6 @@
 ﻿#pragma warning disable CS0414
+using System.Reflection;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace DCFApixels.Notes
@@ -19,7 +21,10 @@ namespace DCFApixels.Notes
         private void OnDrawGizmos()
         {
             if (!_drawIcon) return;
-            Gizmos.DrawIcon(transform.position, "Runtime/Note Icon.png", false, _color);
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var packagePath = PackageInfo.FindForAssembly(assembly).assetPath;
+            Gizmos.DrawIcon(transform.position, packagePath + "Runtime/Note Icon.png", false, _color);
         }
 #endif
     }
