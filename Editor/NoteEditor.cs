@@ -16,7 +16,7 @@ namespace DCFApixels.Notes.Editors
             Selection.activeObject = go;
         }
 
-        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
+        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
         public static void DrawNote(Note note, GizmoType gizmoType)
         {
             if (!note.DrawIcon) return;
