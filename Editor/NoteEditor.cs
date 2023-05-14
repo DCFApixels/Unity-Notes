@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
@@ -13,6 +14,16 @@ namespace DCFApixels.Notes.Editors
             GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
             Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
             Selection.activeObject = go;
+        }
+
+        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
+        public static void DrawNote(Note note, GizmoType gizmoType)
+        {
+            if (!note.DrawIcon) return;
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var packagePath = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly).assetPath;
+            Gizmos.DrawIcon(note.transform.position, packagePath + "/Gizmos/Runtime/Note Icon.png", false, note.Color);
         }
     }
     [CustomEditor(typeof(Note))]

@@ -1,6 +1,4 @@
 ﻿#pragma warning disable CS0414
-using System.Reflection;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace DCFApixels.Notes
@@ -17,15 +15,28 @@ namespace DCFApixels.Notes
         private Color _color = new Color(1, 0.8f, 0.3f, 1f);
         [SerializeField]
         private bool _drawIcon = true;
-
-        private void OnDrawGizmos()
-        {
-            if (!_drawIcon) return;
-
-            var assembly = Assembly.GetExecutingAssembly();
-            var packagePath = PackageInfo.FindForAssembly(assembly).assetPath;
-            Gizmos.DrawIcon(transform.position, packagePath + "/Runtime/Note Icon.png", false, _color);
-        }
 #endif
+        public bool DrawIcon
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return _drawIcon;
+#else
+                return false;
+#endif
+            }
+        }
+        public Color Color
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return _color;
+#else
+                return Color.clear;
+#endif
+            }
+        }
     }
 }
