@@ -1,9 +1,10 @@
 ﻿#pragma warning disable CS0414
+using DCFApixels.Notes.Editors;
 using UnityEngine;
 
 namespace DCFApixels.Notes
 {
-    [AddComponentMenu("Note", 30)]
+    [AddComponentMenu("Notes/" + nameof(Note), 30)]
     internal class Note : MonoBehaviour
     {
 #if UNITY_EDITOR
@@ -12,11 +13,25 @@ namespace DCFApixels.Notes
         [SerializeField]
         private float _height = 100f;
         [SerializeField]
-        private Color _color = new Color(1, 0.8f, 0.3f, 1f);
-        [SerializeField]
         private bool _drawIcon = true;
+
+        [SerializeField, HideInInspector]
+        private int _authorID;
+        [SerializeField, HideInInspector]
+        private int _typeID;
+
+        private AuthorInfo _author;
+        private NoteTypeInfo _type;
 #endif
-        #region Readonly properties
+        internal void UpdateRefs()
+        {
+#if UNITY_EDITOR
+            _author = NotesSettings.Instance.GetAuthorInfoOrDummy(_authorID);
+            _type = NotesSettings.Instance.GetNoteTypeInfoOrDummy(_authorID);
+#endif
+        }
+
+        #region Properties
         public float Height
         {
             get
@@ -39,14 +54,41 @@ namespace DCFApixels.Notes
 #endif
             }
         }
-        public Color Color
+        public AuthorInfo Author
         {
             get
             {
 #if UNITY_EDITOR
-                return _color;
+                if (_author == null) UpdateRefs();
+                return _author;
 #else
-                return default;
+                return null;
+#endif
+            }
+            set
+            {
+#if UNITY_EDITOR
+                _author = value;
+                _authorID = value._id;
+#endif
+            }
+        }
+        public NoteTypeInfo Type
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (_type == null) UpdateRefs();
+                return _type;
+#else
+                return null;
+#endif
+            }
+            set
+            {
+#if UNITY_EDITOR
+                _type = value;
+                _typeID = value._id;
 #endif
             }
         }

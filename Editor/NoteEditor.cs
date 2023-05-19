@@ -1,85 +1,109 @@
-﻿using System.Reflection;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
 {
-    using static NoteConsts;
-
-    internal static class NoteConsts
-    {
-        public const string NOTE_SEPARATOR = ">-<";
-    }
-    internal static class NoteUtils
-    {
-        [MenuItem("GameObject/Create Note")]
-        public static void CreateNote(MenuCommand menuCommand)
-        {
-            GameObject go = new GameObject("Note");
-            go.AddComponent<Note>();
-            GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
-            Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
-            Selection.activeObject = go;
-        }
-
-        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
-        public static void DrawNote(Note note, GizmoType gizmoType)
-        {
-            if (note.DrawIcon)
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var packagePath = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly).assetPath;
-                Gizmos.DrawIcon(note.transform.position, packagePath + "/Gizmos/Runtime/Note Icon.png", false, note.Color);
-            }
-
-            string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
-            Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
-        }
-
-        private static string GetSceneNote(string fullNote, bool isNeedSpacing)
-        {
-            int index = fullNote.IndexOf(NOTE_SEPARATOR);
-            if (index < 0) return string.Empty;
-            string result = fullNote.Substring(0, index);
-            return isNeedSpacing ? "\r\n" + result : result;
-        }
-    }
     [CustomEditor(typeof(Note))]
+    [CanEditMultipleObjects]
     internal class NoteEditor : Editor
     {
-        private Rect rect = new Rect();
+        private Rect fullRect = new Rect();
         private Texture2D _lineTex;
         private bool _IsInit = false;
+        private static float _headerHeight = 27;
+
+        private GUIStyle _settingsButtonStyle;
 
         private Note Target => target as Note;
+
+        private GenericMenu _authorsGenericMenu;
+        private int _authorsGenericMenuCount;
+        private GenericMenu _typesGenericMenu;
+        private int _typesGenericMenuCount;
+
+        private NotesSettings Settings => NotesSettings.Instance;
+
+
+        public GenericMenu GetAuthorsGenericMenu()
+        {
+            if (_authorsGenericMenu == null || _authorsGenericMenuCount != Settings.AuthorsCount)
+            {
+                _authorsGenericMenuCount = Settings.AuthorsCount;
+                _authorsGenericMenu = new GenericMenu();
+                foreach (var author in Settings.Authors)
+                    _authorsGenericMenu.AddItem(new GUIContent(author.name), false, OnAuthorSelected, author);
+            }
+            return _authorsGenericMenu;
+        }
+        private void OnAuthorSelected(object obj)
+        {
+            AuthorInfo author = (AuthorInfo)obj;
+            serializedObject.FindProperty("_authorID").intValue = author._id;
+            serializedObject.ApplyModifiedProperties();
+        }
+        public GenericMenu GetTypesGenericMenu()
+        {
+            if (_typesGenericMenu == null || _typesGenericMenuCount != Settings.TypesCount)
+            {
+                _typesGenericMenuCount = Settings.TypesCount;
+                _typesGenericMenu = new GenericMenu();
+                foreach (var type in Settings.Types)
+                    _typesGenericMenu.AddItem(new GUIContent(type.name), false, OnTypeSelected, type);
+            }
+            return _typesGenericMenu;
+        }
+        private void OnTypeSelected(object obj)
+        {
+            NoteTypeInfo type = (NoteTypeInfo)obj;
+            serializedObject.FindProperty("_typeID").intValue = type._id;
+            serializedObject.ApplyModifiedProperties();
+        }
 
         private void Init()
         {
             if (_IsInit) return;
             _lineTex = CreateTexture(2, 2, Color.black);
+
+            _settingsButtonStyle = new GUIStyle(EditorStyles.miniButton);
+            _settingsButtonStyle.padding = new RectOffset(0, 0, 0, 0);
+
             _IsInit = true;
         }
+
+
 
         public override void OnInspectorGUI()
         {
             Init();
+
+            SerializedProperty heightProp = serializedObject.FindProperty("_height");
+            SerializedProperty textProp = serializedObject.FindProperty("_text");
+            SerializedProperty authorProp = serializedObject.FindProperty("_authorID");
+            SerializedProperty typeProp = serializedObject.FindProperty("_typeID");
+            SerializedProperty drawIconProp = serializedObject.FindProperty("_drawIcon");
+
             Color defaultColor = GUI.color;
             Color defaultBackgroundColor = GUI.backgroundColor;
 
+            AuthorInfo author = Settings.GetAuthorInfoOrDummy(authorProp.intValue);
+            NoteTypeInfo noteType = Settings.GetNoteTypeInfoOrDummy(typeProp.intValue);
+            Color headerColor = author.color;
+            Color bodyColor = noteType.color;
+
             EditorGUI.BeginChangeCheck();
-            SerializedProperty heightProp = serializedObject.FindProperty("_height");
-            SerializedProperty textProp = serializedObject.FindProperty("_text");
-            SerializedProperty colorProp = serializedObject.FindProperty("_color");
-            SerializedProperty drawIconProp = serializedObject.FindProperty("_drawIcon");
 
-            Color color = colorProp.colorValue;
+            Color headerBackColor = NormalizeBackgroundColor(headerColor);
 
-            Color elemcolor = NormalizeBackgroundColor(color);
-            rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + heightProp.floatValue + 5);
+            fullRect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + heightProp.floatValue + 5);
+            Rect headerRect = fullRect;
+            headerRect.height = _headerHeight;
+            Rect bodyRect = fullRect;
+            bodyRect.yMin += _headerHeight;
 
-            EditorGUI.DrawRect(rect, color);
+            EditorGUI.DrawRect(headerRect, headerColor);
+            EditorGUI.DrawRect(bodyRect, bodyColor);
 
-            GUI.backgroundColor = elemcolor;
+            GUI.backgroundColor = headerBackColor;
 
             GUIStyle areastyle = new GUIStyle(EditorStyles.wordWrappedLabel);
 
@@ -93,22 +117,44 @@ namespace DCFApixels.Notes.Editors
             gUIStyle.normal.textColor = new Color(0.1f, 0.1f, 0.1f, 0.2f);
 
             drawIconProp.boolValue = EditorGUILayout.Toggle(drawIconProp.boolValue, GUILayout.MaxWidth(16));
+
+
+            GUI.backgroundColor = Color.white;
+            GUI.color = Color.black;
+            GUILayout.Label("Author:", GUILayout.Width(44));
+            GUI.color = headerColor;
+            if (GUILayout.Button(author.IsDummy() ? "-" : author.name, EditorStyles.popup))
+            {
+                GetAuthorsGenericMenu().ShowAsContext();
+            }
+            GUI.color = Color.black;
+            GUILayout.Label("Type:", GUILayout.Width(36));
+            GUI.color = headerColor;
+            if (GUILayout.Button(noteType.IsDummy() ? "-" : noteType.name, EditorStyles.popup))
+            {
+                GetTypesGenericMenu().ShowAsContext();
+            }
+            if (GUILayout.Button(EditorGUIUtility.IconContent("_Popup"), _settingsButtonStyle, GUILayout.Width(18f)))
+            {
+                NotesSettingsWindow.Open();
+            }
             GUILayout.Label("", gUIStyle);
 
             float originalValue = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 14;
             GUI.color = new Color(0.2f, 0.2f, 0.2f);
-            GUI.backgroundColor = Color.white;
 
             GUIStyle gUIStylex = new GUIStyle(EditorStyles.helpBox);
             heightProp.floatValue = EditorGUILayout.FloatField("↕", heightProp.floatValue, gUIStylex, GUILayout.MaxWidth(58));
             heightProp.floatValue = Mathf.Max(20f, heightProp.floatValue);
-            GUI.color = defaultColor;
             EditorGUIUtility.labelWidth = originalValue;
 
-            Color newColor = EditorGUILayout.ColorField(colorProp.colorValue, GUILayout.MaxWidth(40));
-            newColor.a = 1f;
-            colorProp.colorValue = newColor;
+
+            GUI.color = defaultColor;
+
+            //Color newColor = EditorGUILayout.ColorField(colorProp.colorValue, GUILayout.MaxWidth(40));
+            //newColor.a = 1f;
+            //colorProp.colorValue = newColor;
 
             EditorGUILayout.EndHorizontal();
 
@@ -120,9 +166,14 @@ namespace DCFApixels.Notes.Editors
             serializedObject.ApplyModifiedProperties();
             EditorGUI.EndChangeCheck();
         }
+
+        private void DrawNote(Note target, SerializedObject serializedObject)
+        {
+
+        }
         public override void DrawPreview(Rect previewArea)
         {
-            rect = previewArea;
+            fullRect = previewArea;
             base.DrawPreview(previewArea);
         }
         private static Color NormalizeBackgroundColor(Color color)
