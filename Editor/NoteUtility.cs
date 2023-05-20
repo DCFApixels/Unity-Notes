@@ -44,11 +44,11 @@ namespace DCFApixels.Notes.Editors
         {
             if (note.DrawIcon)
             {
-                Gizmos.DrawIcon(note.transform.position, NoteUtility.GetGizmosPath() + "/Runtime/Note Author Icon.png", false, note.Author.color);
-                Gizmos.DrawIcon(note.transform.position, NoteUtility.GetGizmosPath() + "/Runtime/Note Type Icon.png", false, note.Type.color);
+                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Author Icon.png", false, note.Author.color);
+                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Type Icon.png", false, note.Type.color);
             }
 
-            string sceneNote = NoteUtility.GetSceneNote(note.Text, note.DrawIcon);
+            string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
             Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
         }
 
