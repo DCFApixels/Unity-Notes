@@ -41,6 +41,8 @@ namespace DCFApixels.Notes.Editors
             AuthorInfo author = (AuthorInfo)obj;
             serializedObject.FindProperty("_authorID").intValue = author._id;
             serializedObject.ApplyModifiedProperties();
+            foreach (Note note in targets)
+                note.UpdateRefs();
         }
         public GenericMenu GetTypesGenericMenu()
         {
@@ -58,6 +60,8 @@ namespace DCFApixels.Notes.Editors
             NoteTypeInfo type = (NoteTypeInfo)obj;
             serializedObject.FindProperty("_typeID").intValue = type._id;
             serializedObject.ApplyModifiedProperties();
+            foreach (Note note in targets)
+                note.UpdateRefs();
         }
 
         private void Init()

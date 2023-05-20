@@ -29,7 +29,7 @@ namespace DCFApixels.Notes.Editors
         }
 
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
-        public static void DrawLazyNote(LazyNote note, GizmoType gizmoType)
+        private static void DrawLazyNote(LazyNote note, GizmoType gizmoType)
         {
             if (note.DrawIcon)
             {
@@ -39,21 +39,20 @@ namespace DCFApixels.Notes.Editors
             string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
             Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
         }
-
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
-        public static void DrawNote(Note note, GizmoType gizmoType)
+        private static void DrawNote(Note note, GizmoType gizmoType)
         {
             if (note.DrawIcon)
             {
-                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Author Icon.png", false, note.Author.color);
-                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Type Icon.png", false, note.Type.color);
+                Gizmos.DrawIcon(note.transform.position, NoteUtility.GetGizmosPath() + "/Runtime/Note Author Icon.png", false, note.Author.color);
+                Gizmos.DrawIcon(note.transform.position, NoteUtility.GetGizmosPath() + "/Runtime/Note Type Icon.png", false, note.Type.color);
             }
 
-            string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
+            string sceneNote = NoteUtility.GetSceneNote(note.Text, note.DrawIcon);
             Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
         }
 
-        private static string GetGizmosPath()
+        internal static string GetGizmosPath()
         {
             if (string.IsNullOrEmpty(_gizmosPath))
             {
@@ -68,7 +67,7 @@ namespace DCFApixels.Notes.Editors
             }
             return _gizmosPath;
         }
-        private static string GetSceneNote(string fullNote, bool isNeedSpacing)
+        internal static string GetSceneNote(string fullNote, bool isNeedSpacing)
         {
             int index = fullNote.IndexOf(NOTE_SEPARATOR);
             if (index < 0) return string.Empty;

@@ -28,7 +28,7 @@ namespace DCFApixels.Notes
         {
 #if UNITY_EDITOR
             _author = NotesSettings.Instance.GetAuthorInfoOrDummy(_authorID);
-            _type = NotesSettings.Instance.GetNoteTypeInfoOrDummy(_authorID);
+            _type = NotesSettings.Instance.GetNoteTypeInfoOrDummy(_typeID);
 #endif
         }
 
