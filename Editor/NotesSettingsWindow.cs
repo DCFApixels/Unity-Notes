@@ -18,6 +18,8 @@ namespace DCFApixels.Notes.Editors
 
         private SerializedObject target;
 
+        private Vector2 scrollViewPos;
+
         private void OnGUI()
         {
             if(target == null)
@@ -26,10 +28,12 @@ namespace DCFApixels.Notes.Editors
                 target = new SerializedObject(Settigns);
             }
 
+            GUILayout.BeginScrollView(scrollViewPos);
+
             SerializedProperty authorsProp = target.FindProperty("_authorsSerialization");
             SerializedProperty typesProp = target.FindProperty("_typesSerialization");
             int oldAuthorsCount = authorsProp.arraySize;
-            int typesCount = typesProp.arraySize;
+            int oldTypesCount = typesProp.arraySize;
             GUI.enabled = true;
         
             EditorGUI.BeginChangeCheck();
@@ -42,15 +46,17 @@ namespace DCFApixels.Notes.Editors
                     for (int i = oldAuthorsCount; i < authorsProp.arraySize; i++)
                         authorsProp.GetArrayElementAtIndex(i).FindPropertyRelative("_id").intValue = 0;
                 }
-                if(typesProp.arraySize != typesCount)
+                if(typesProp.arraySize != oldTypesCount)
                 {
-                    for (int i = oldAuthorsCount; i < typesProp.arraySize; i++)
+                    for (int i = oldTypesCount; i < typesProp.arraySize; i++)
                         typesProp.GetArrayElementAtIndex(i).FindPropertyRelative("_id").intValue = 0;
                 }
                 target.ApplyModifiedProperties();
                 EditorUtility.SetDirty(Settigns);
                 Settigns.Save();
             }
+
+            GUILayout.EndScrollView();
         }
     }
 }

@@ -71,6 +71,16 @@ namespace DCFApixels.Notes.Editors
 
         public void Save()
         {
+            foreach (var item in _authorsSerialization)
+            {
+                if (item._id == NO_INIT_ID) item._id = _authorIDIncrement++;
+                item.color.a = 255;
+            }
+            foreach (var item in _typesSerialization)
+            {
+                if (item._id == NO_INIT_ID) item._id = _typeIDIncrement++;
+                item.color.a = 255;
+            }
             Save(false);
         }
        //public void SetNewAuthors(IEnumerable<AuthorInfo> authors)
@@ -98,7 +108,6 @@ namespace DCFApixels.Notes.Editors
                 if (item._id == NO_INIT_ID) item._id = _authorIDIncrement++;
                 item.color.a = 255;
             }
-
             foreach (var item in _typesSerialization)
             {
                 if (item._id == NO_INIT_ID) item._id = _typeIDIncrement++;
