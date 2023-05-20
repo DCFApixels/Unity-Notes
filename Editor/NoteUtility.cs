@@ -9,7 +9,7 @@ namespace DCFApixels.Notes.Editors
     {
         private static string _gizmosPath;
 
-        [MenuItem("GameObject/Create " + nameof(LazyNote))]
+        [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(LazyNote))]
         public static void CreateLazyNote(MenuCommand menuCommand)
         {
             GameObject go = new GameObject(nameof(LazyNote));
@@ -18,7 +18,7 @@ namespace DCFApixels.Notes.Editors
             Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
             Selection.activeObject = go;
         }
-        [MenuItem("GameObject/Create " + nameof(Note))]
+        [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(Note))]
         public static void CreateNote(MenuCommand menuCommand)
         {
             GameObject go = new GameObject(nameof(Note));
