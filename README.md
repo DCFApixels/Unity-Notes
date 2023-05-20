@@ -5,9 +5,12 @@
 Notes on Scene View for designers.
 
 ## Installation
-Use the + inside the Package Manager window and add this URL:
-https://github.com/DCFApixels/Notes-Unity.git
+Use the + inside the Package Manager window and add this URL: https://github.com/DCFApixels/Notes-Unity.git
+
+![image](https://github.com/DCFApixels/Notes-Unity/assets/99481254/24e5907d-c8cf-48fb-a07c-a74daaff604f)
+
+
 ## How to use
-Just add the "Note" component to any object. Or use RMB + "GameObject/Create" Note to automatically create a note object.
+Just add the "Note" or "LazyNote" component to any object. Or use RMB + "GameObject/Notes/Create Note"(or LazyNote) to automatically create a note object.
 
 To display text in the Scene View window, use the separator ">-<" all text before it will be displayed
