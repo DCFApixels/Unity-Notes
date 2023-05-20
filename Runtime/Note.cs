@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace DCFApixels.Notes
 {
+    using static NotesConsts;
     [AddComponentMenu("Notes/" + nameof(Note), 30)]
     internal class Note : MonoBehaviour
     {
@@ -11,7 +12,7 @@ namespace DCFApixels.Notes
         [SerializeField]
         private string _text = "Enter text...";
         [SerializeField]
-        private float _height = 100f;
+        private float _height = DEFAULT_NOTE_HEIGHT;
         [SerializeField]
         private bool _drawIcon = true;
 

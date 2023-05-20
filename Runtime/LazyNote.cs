@@ -11,7 +11,7 @@ namespace DCFApixels.Notes
         [SerializeField]
         private string _text = "Enter text...";
         [SerializeField]
-        private float _height = 100f;
+        private float _height = DEFAULT_NOTE_HEIGHT;
         [SerializeField]
         private Color _color = STICKER_COLOR;
         [SerializeField]

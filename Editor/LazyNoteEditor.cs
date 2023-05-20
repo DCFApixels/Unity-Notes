@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
 {
+    using static NotesConsts;
     [CustomEditor(typeof(LazyNote))]
     internal class LazyNoteEditor : Editor
     {
@@ -61,7 +62,7 @@ namespace DCFApixels.Notes.Editors
 
             GUIStyle gUIStylex = new GUIStyle(EditorStyles.helpBox);
             heightProp.floatValue = EditorGUILayout.FloatField("↕", heightProp.floatValue, gUIStylex, GUILayout.MaxWidth(58));
-            heightProp.floatValue = Mathf.Max(20f, heightProp.floatValue);
+            heightProp.floatValue = Mathf.Max(MIN_NOTE_HEIGHT, heightProp.floatValue);
             GUI.color = defaultColor;
             EditorGUIUtility.labelWidth = originalValue;
 

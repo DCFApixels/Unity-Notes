@@ -8,6 +8,9 @@ namespace DCFApixels.Notes
         public const string AUTHOR = "DCFApixels";
         public const string NOTE_SEPARATOR = ">-<";
 
+        public const float DEFAULT_NOTE_HEIGHT = 100f;
+        public const float MIN_NOTE_HEIGHT = 20f;
+
         public const string STICKER_NAME = "Sticker";
         public const string ANONYMOUS_NAME = "Anonymous";
         public static readonly Color STICKER_COLOR = new Color(1f, 0.8f, 0.3f, 1f);

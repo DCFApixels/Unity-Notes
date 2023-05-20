@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
 {
+    using static NotesConsts;
     [CustomEditor(typeof(Note))]
     [CanEditMultipleObjects]
     internal class NoteEditor : Editor
@@ -85,12 +86,11 @@ namespace DCFApixels.Notes.Editors
             Color defaultColor = GUI.color;
             Color defaultBackgroundColor = GUI.backgroundColor;
 
-            AuthorInfo author = Settings.GetAuthorInfoOrDummy(authorProp.intValue);
-            NoteTypeInfo noteType = Settings.GetNoteTypeInfoOrDummy(typeProp.intValue);
+            AuthorInfo author = Settings.GetAuthorInfoOrDummy(authorProp.hasMultipleDifferentValues ? 0 : authorProp.intValue);
+            NoteTypeInfo noteType = Settings.GetNoteTypeInfoOrDummy(typeProp.hasMultipleDifferentValues ? 0 : typeProp.intValue);
             Color headerColor = author.color;
             Color bodyColor = noteType.color;
 
-            EditorGUI.BeginChangeCheck();
 
             Color headerBackColor = NormalizeBackgroundColor(headerColor);
 
@@ -145,8 +145,12 @@ namespace DCFApixels.Notes.Editors
             GUI.color = new Color(0.2f, 0.2f, 0.2f);
 
             GUIStyle gUIStylex = new GUIStyle(EditorStyles.helpBox);
-            heightProp.floatValue = EditorGUILayout.FloatField("↕", heightProp.floatValue, gUIStylex, GUILayout.MaxWidth(58));
-            heightProp.floatValue = Mathf.Max(20f, heightProp.floatValue);
+            EditorGUI.BeginChangeCheck();
+            float newHeight = EditorGUILayout.FloatField("↕", heightProp.hasMultipleDifferentValues ? DEFAULT_NOTE_HEIGHT : heightProp.floatValue, gUIStylex, GUILayout.MaxWidth(58));
+            if (EditorGUI.EndChangeCheck())
+            {
+                heightProp.floatValue = Mathf.Max(newHeight, MIN_NOTE_HEIGHT);
+            }
             EditorGUIUtility.labelWidth = originalValue;
 
 
@@ -160,11 +164,16 @@ namespace DCFApixels.Notes.Editors
 
             GUILayout.Box(_lineTex, GUILayout.Height(1), GUILayout.ExpandWidth(true));
 
-            textProp.stringValue = EditorGUILayout.TextArea(textProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
+            EditorGUI.BeginChangeCheck();
+            string newValue = EditorGUILayout.TextArea(textProp.hasMultipleDifferentValues? "-" : textProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
+            if (EditorGUI.EndChangeCheck())
+            {
+                textProp.stringValue = newValue;
+            }
+
             GUI.backgroundColor = defaultBackgroundColor;
 
             serializedObject.ApplyModifiedProperties();
-            EditorGUI.EndChangeCheck();
         }
 
         private void DrawNote(Note target, SerializedObject serializedObject)
