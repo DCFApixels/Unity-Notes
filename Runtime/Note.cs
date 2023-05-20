@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DCFApixels.Notes
 {
     using static NotesConsts;
-    [AddComponentMenu("Notes/" + nameof(Note), 30)]
+    [AddComponentMenu(ASSET_SHORT_NAME + "/" + nameof(Note), 30)]
     internal class Note : MonoBehaviour
     {
 #if UNITY_EDITOR

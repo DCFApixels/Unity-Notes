@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DCFApixels.Notes
 {
     using static NotesConsts;
-    [AddComponentMenu("Notes/" + nameof(LazyNote), 30)]
+    [AddComponentMenu(ASSET_SHORT_NAME + "/" + nameof(LazyNote), 30)]
     internal class LazyNote : MonoBehaviour
     {
 #if UNITY_EDITOR

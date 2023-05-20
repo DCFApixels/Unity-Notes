@@ -6,9 +6,10 @@ namespace DCFApixels.Notes
     [Serializable]
     public abstract class NotePropertyInfo
     {
-        [SerializeField, HideInInspector]
+        [SerializeField]
+        [HideInInspector]
         internal int _id;
-        public string name;
+        public string name = "Name";
 
         protected NotePropertyInfo(int id)
         {

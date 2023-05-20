@@ -23,6 +23,7 @@ namespace DCFApixels.Notes.Editors
         {
             if(target == null)
             {
+                Settigns.hideFlags = ~HideFlags.HideAndDontSave;
                 target = new SerializedObject(Settigns);
             }
 
@@ -49,6 +50,7 @@ namespace DCFApixels.Notes.Editors
                 }
                 target.ApplyModifiedProperties();
                 EditorUtility.SetDirty(Settigns);
+                Settigns.Save();
             }
         }
     }

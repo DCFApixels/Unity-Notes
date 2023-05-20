@@ -14,7 +14,17 @@ namespace DCFApixels.Notes
         public const string STICKER_NAME = "Sticker";
         public const string ANONYMOUS_NAME = "Anonymous";
         public static readonly Color STICKER_COLOR = new Color(1f, 0.8f, 0.3f, 1f);
-        public static readonly Color ANONYMOUS_COLOR = new Color(0.5f, 0.5f, 0.5f, 1f);
-        public static readonly Color NEUTRAL_COLOR = new Color(0.5f, 0.5f, 0.5f, 1f);
+        public static readonly Color NEUTRAL_COLOR = new Color(0.68f, 0.73f, 0.77f, 1f);
+
+        public static readonly AuthorInfo DUMMY_AUTHOR = new AuthorInfo(0)
+        {
+            name = "Dummy",
+            color = NEUTRAL_COLOR,
+        };
+        public static readonly NoteTypeInfo DUMMY_NOTE_TYPE = new NoteTypeInfo(0)
+        {
+            name = "Dummy",
+            color = NEUTRAL_COLOR,
+        };
     }
 }
