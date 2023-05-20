@@ -13,4 +13,6 @@ Use the + inside the Package Manager window and add this URL: https://github.com
 ## How to use
 Just add the "Note" or "LazyNote" component to any object. Or use RMB + "GameObject/Notes/Create Note"(or LazyNote) to automatically create a note object.
 
+To add Author or Note Type presets, click on the gear icon in the Note component
+
 To display text in the Scene View window, use the separator ">-<" all text before it will be displayed
