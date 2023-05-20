@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -117,3 +118,4 @@ namespace DCFApixels.Notes.Editors
         public static bool IsDummy(this NoteTypeInfo self) => self == DUMMY_NOTE_TYPE;
     }
 }
+#endif

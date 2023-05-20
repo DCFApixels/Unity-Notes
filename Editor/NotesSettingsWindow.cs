@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
 {
-    using static NotesConsts;
     internal class NotesSettingsWindow : EditorWindow
     {
         //[MenuItem("Window/" + AUTHOR + "/" + ASSET_SHORT_NAME + "/Settings")]
@@ -55,3 +54,4 @@ namespace DCFApixels.Notes.Editors
         }
     }
 }
+#endif

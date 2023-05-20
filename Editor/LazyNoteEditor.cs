@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace DCFApixels.Notes.Editors
@@ -104,3 +105,4 @@ namespace DCFApixels.Notes.Editors
         }
     }
 }
+#endif

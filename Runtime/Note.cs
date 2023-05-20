@@ -1,5 +1,7 @@
 ﻿#pragma warning disable CS0414
+#if UNITY_EDITOR
 using DCFApixels.Notes.Editors;
+#endif
 using UnityEngine;
 
 namespace DCFApixels.Notes
