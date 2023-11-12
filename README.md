@@ -1,11 +1,20 @@
 # Notes-Unity
+
+<p align="center">
+<img alt="Version" src="https://img.shields.io/github/package-json/v/DCFApixels/Notes-Unity?color=%23FFC200&style=for-the-badge">
+<img alt="License" src="https://img.shields.io/github/license/DCFApixels/Notes-Unity?color=FFC200&style=for-the-badge">
+</p>
+
 <img src="https://github.com/DCFApixels/Notes-Unity/assets/99481254/e8e3e6a9-9d35-48db-b786-45554fa3e08e" width="600">
 
 Notes on Scene View for designers.
 
 ## Installation
 Use the + inside the Package Manager window and add this URL: https://github.com/DCFApixels/Notes-Unity.git
+
 ![image](https://github.com/DCFApixels/Notes-Unity/assets/99481254/24e5907d-c8cf-48fb-a07c-a74daaff604f)
+
+Versioning semantics: [Open](https://gist.github.com/DCFApixels/c3b178a308b411f530361d1d56f1f929#versioning)
 
 
 ## How to use
