@@ -22,7 +22,7 @@ namespace DCFApixels.Notes.Editors
 
         private void OnGUI()
         {
-            if(target == null)
+            if (target == null)
             {
                 Settigns.hideFlags = ~HideFlags.HideAndDontSave;
                 target = new SerializedObject(Settigns);
@@ -35,18 +35,18 @@ namespace DCFApixels.Notes.Editors
             int oldAuthorsCount = authorsProp.arraySize;
             int oldTypesCount = typesProp.arraySize;
             GUI.enabled = true;
-        
+
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(authorsProp, new GUIContent("Authors"));
             EditorGUILayout.PropertyField(typesProp, new GUIContent("Types"));
             if (EditorGUI.EndChangeCheck())
             {
-                if(authorsProp.arraySize != oldAuthorsCount)
+                if (authorsProp.arraySize != oldAuthorsCount)
                 {
                     for (int i = oldAuthorsCount; i < authorsProp.arraySize; i++)
                         authorsProp.GetArrayElementAtIndex(i).FindPropertyRelative("_id").intValue = 0;
                 }
-                if(typesProp.arraySize != oldTypesCount)
+                if (typesProp.arraySize != oldTypesCount)
                 {
                     for (int i = oldTypesCount; i < typesProp.arraySize; i++)
                         typesProp.GetArrayElementAtIndex(i).FindPropertyRelative("_id").intValue = 0;

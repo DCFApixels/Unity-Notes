@@ -170,7 +170,7 @@ namespace DCFApixels.Notes.Editors
             GUILayout.Box(_lineTex, GUILayout.Height(1), GUILayout.ExpandWidth(true));
 
             EditorGUI.BeginChangeCheck();
-            string newValue = EditorGUILayout.TextArea(textProp.hasMultipleDifferentValues? "-" : textProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
+            string newValue = EditorGUILayout.TextArea(textProp.hasMultipleDifferentValues ? "-" : textProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
             if (EditorGUI.EndChangeCheck())
             {
                 textProp.stringValue = newValue;

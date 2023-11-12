@@ -7,8 +7,13 @@ using UnityEngine;
 namespace DCFApixels.Notes
 {
     using static NotesConsts;
+    public interface INote
+    {
+        public string Text { get; }
+        public Color Color { get; }
+    }
     [AddComponentMenu(ASSET_SHORT_NAME + "/" + nameof(Note), 30)]
-    internal class Note : MonoBehaviour
+    internal class Note : MonoBehaviour, INote
     {
 #if UNITY_EDITOR
         [SerializeField]
@@ -101,6 +106,18 @@ namespace DCFApixels.Notes
             {
 #if UNITY_EDITOR
                 return _drawIcon;
+#else
+                return default;
+#endif
+            }
+        }
+
+        public Color Color
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return _type.color;
 #else
                 return default;
 #endif

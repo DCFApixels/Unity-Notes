@@ -5,7 +5,7 @@ namespace DCFApixels.Notes
 {
     using static NotesConsts;
     [AddComponentMenu(ASSET_SHORT_NAME + "/" + nameof(LazyNote), 30)]
-    internal class LazyNote : MonoBehaviour
+    internal class LazyNote : MonoBehaviour, INote
     {
 #if UNITY_EDITOR
         [SerializeField]

@@ -4,6 +4,8 @@ namespace DCFApixels.Notes
 {
     internal class NotesConsts
     {
+        public const string NOTES_ROOT_NAME = "NOTES";
+
         public const string ASSET_SHORT_NAME = "Notes";
         public const string AUTHOR = "DCFApixels";
         public const string NOTE_SEPARATOR = ">-<";

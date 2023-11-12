@@ -83,14 +83,14 @@ namespace DCFApixels.Notes.Editors
             }
             Save(false);
         }
-       //public void SetNewAuthors(IEnumerable<AuthorInfo> authors)
-       //{
-       //    _authorsSerialization = authors.ToArray();
-       //}
-       //public void SetNewNoteTypes(IEnumerable<NoteTypeInfo> types)
-       //{
-       //    _typesSerialization = types.ToArray();
-       //}
+        //public void SetNewAuthors(IEnumerable<AuthorInfo> authors)
+        //{
+        //    _authorsSerialization = authors.ToArray();
+        //}
+        //public void SetNewNoteTypes(IEnumerable<NoteTypeInfo> types)
+        //{
+        //    _typesSerialization = types.ToArray();
+        //}
 
         #region ISerializationCallbackReceiver
         [SerializeField]
