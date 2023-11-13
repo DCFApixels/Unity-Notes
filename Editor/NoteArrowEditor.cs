@@ -9,7 +9,27 @@ namespace DCFApixels.Notes.Editors
     [InitializeOnLoad]
     public class NoteArrowEditor : Editor
     {
-        private const float arrowHeight = 0.0085f;
+        private struct Segment
+        {
+            public float halfHeight;
+            public float lerpT;
+            public Segment(float halfHeight, float lerpT)
+            {
+                this.halfHeight = halfHeight;
+                this.lerpT = lerpT;
+            }
+        }
+        private static float _heightMultiplier = 0.0215f;
+        private static Segment[] _segments = new Segment[] { 
+            new Segment(0.00f / 2f, 0.00f * 0.99f),
+            new Segment(0.66f / 2f, 0.01f * 0.97f),
+            new Segment(1.00f / 2f, 0.04f * 0.94f),
+            new Segment(0.55f / 2f, 0.20f * 0.90f),
+            new Segment(0.15f / 2f, 0.55f * 0.90f),
+            new Segment(0.00f / 2f, 1.00f * 0.85f),
+            //new Segment(0.00f / 2f, 1.00f),
+        };
+
         [DrawGizmo(GizmoType.Active | GizmoType.NonSelected)]
         static void DrawGizmo(NoteArrow obj, GizmoType type)
         {
@@ -20,7 +40,7 @@ namespace DCFApixels.Notes.Editors
                 _arrows.Add(obj);
         }
         private static HashSet<NoteArrow> _arrows = new HashSet<NoteArrow>();
-        private static HashSet<NoteArrow> _removedArrows = new HashSet<NoteArrow>();
+        private static List<NoteArrow> _removedArrows = new List<NoteArrow>();
         static NoteArrowEditor()
         {
             SceneView.duringSceneGui += SceneView_duringSceneGui;
@@ -38,6 +58,8 @@ namespace DCFApixels.Notes.Editors
                         _removedArrows.Add(item);
                 }
                 _arrows.SymmetricExceptWith(_removedArrows);
+
+
                 foreach (var obj in _arrows)
                 {
                     if (obj.Target == null)
@@ -68,24 +90,36 @@ namespace DCFApixels.Notes.Editors
                         toCameraDirection = camera.transform.position - startPoint;
                     }
 
-                    float height = arrowHeight * toCameraDirection.magnitude;
-
                     float startOffset = 0.02f * toCameraDirection.magnitude;
-                    float endOffset = 0.2f;
 
                     Vector3 direction = endPoint - startPoint;
-                    Quaternion q = Quaternion.LookRotation(toCameraDirection, direction);
+                    Quaternion rotation = Quaternion.LookRotation(toCameraDirection, direction);
+                    startPoint = startPoint + rotation * (Vector3.up * startOffset);
+                    direction = endPoint - startPoint;
 
-                    endPoint -= direction.normalized * endOffset;
-                    startPoint = startPoint + q * (Vector3.up * startOffset);
-
-                    Vector3 startPoint1 = startPoint + q * (Vector3.left * height / 2f);
-                    Vector3 startPoint2 = startPoint + q * (Vector3.right * height / 2f);
+                    //TODO заменить отрисовку иконок с Gizmos.DrawIcon на GUI.DrawTexture, для большей гибкости
+                    //Handles.BeginGUI();
+                    //GUI.DrawTexture(new Rect(0, 0, 100, 100), tex, ScaleMode.StretchToFill, true, 10.0F);
+                    //Handles.EndGUI();
 
                     Handles.DrawLine(startPoint, endPoint);
-                    Handles.DrawLine(startPoint1, endPoint);
-                    Handles.DrawLine(startPoint2, endPoint);
-
+                    Vector3 startPoint1 = Vector3.zero;
+                    Vector3 startPoint2 = Vector3.zero;
+                    for (int i = 0; i < _segments.Length; i++)
+                    {
+                        Segment segment = _segments[i];
+                        Vector3 lerpPoint = startPoint + direction.normalized * direction.magnitude * segment.lerpT;
+                        float height = segment.halfHeight * toCameraDirection.magnitude / 2f * _heightMultiplier;
+                        Vector3 endPoint1 = lerpPoint + rotation * (Vector3.left * height);
+                        Vector3 endPoint2 = lerpPoint + rotation * (Vector3.right * height);
+                        if (i > 0)
+                        {
+                            Handles.DrawLine(startPoint1, endPoint1);
+                            Handles.DrawLine(startPoint2, endPoint2);
+                        }
+                        startPoint1 = endPoint1;
+                        startPoint2 = endPoint2;
+                    }
                     Handles.color = defaultColor;
                 }
             }
@@ -105,9 +139,6 @@ namespace DCFApixels.Notes.Editors
 
             Rect rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2 + 9);
             EditorGUI.DrawRect(rect, color);
-
-            float labelWidth = EditorGUIUtility.labelWidth;
-            EditorGUIUtility.labelWidth = 0;
 
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(targetProp);
