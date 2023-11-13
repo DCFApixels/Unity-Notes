@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/DCFApixels/Notes-Unity/assets/99481254/e8e3e6a9-9d35-48db-b786-45554fa3e08e" width="600" >
+<img src="https://github.com/DCFApixels/Notes-Unity/assets/99481254/d6e83712-be0b-4d74-9fce-b78872f32434" >
 </p>
 
 <p align="center">
@@ -8,9 +8,10 @@
 </p>
 
 # Notes for Unity Editor
-
-
 Notes on Scene View for designers.
+<p align="center">
+<img src="https://github.com/DCFApixels/Notes-Unity/assets/99481254/e8e3e6a9-9d35-48db-b786-45554fa3e08e" width="600" >
+</p>
 
 ## Installation
 
