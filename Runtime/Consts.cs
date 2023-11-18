@@ -4,7 +4,8 @@ namespace DCFApixels.Notes
 {
     internal class NotesConsts
     {
-        public const string NOTES_ROOT_NAME = "NOTES";
+        public const string EDITOR_NAME_TAG = "EditorOnly";
+        public const string NOTES_ROOT_NAME = "NOTES (" + EDITOR_NAME_TAG + ")";
 
         public const string ASSET_SHORT_NAME = "Notes";
         public const string AUTHOR = "DCFApixels";

@@ -13,12 +13,15 @@ namespace DCFApixels.Notes.Editors
         {
             GameObject root = GameObject.Find(name);
             if (root == null)
+            {
                 root = new GameObject(name);
+                root.tag = EDITOR_NAME_TAG;
+            }
             return root;
         }
 
         #region CreateLazyNote
-        [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(LazyNote) + "with arrow")]
+        [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(LazyNote) + " with arrow")]
         public static void CreateLazyNoteWithArrow(MenuCommand menuCommand)
         {
             GameObject go = CreateLazyNoteInternal(menuCommand);
@@ -34,6 +37,7 @@ namespace DCFApixels.Notes.Editors
         private static GameObject CreateLazyNoteInternal(MenuCommand menuCommand)
         {
             GameObject go = new GameObject(nameof(LazyNote));
+            go.tag = EDITOR_NAME_TAG;
             go.AddComponent<LazyNote>();
             GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
             if (go.transform.parent == null)
@@ -44,7 +48,7 @@ namespace DCFApixels.Notes.Editors
         #endregion
 
         #region CreateNote
-        [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(Note) + "with arrow")]
+        [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(Note) + " with arrow")]
         public static void CreateNoteWithArrow(MenuCommand menuCommand)
         {
             GameObject go = CreateNoteInternal(menuCommand);
@@ -60,6 +64,7 @@ namespace DCFApixels.Notes.Editors
         private static GameObject CreateNoteInternal(MenuCommand menuCommand)
         {
             GameObject go = new GameObject(nameof(Note));
+            go.tag = EDITOR_NAME_TAG;
             go.AddComponent<Note>();
             GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
             if (go.transform.parent == null)
