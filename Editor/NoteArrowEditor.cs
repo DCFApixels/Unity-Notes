@@ -7,20 +7,10 @@ namespace DCFApixels.Notes.Editors
 {
     [CustomEditor(typeof(NoteArrow))]
     [InitializeOnLoad]
-    public class NoteArrowEditor : Editor
+    internal class NoteArrowEditor : ExtendedEditor<NoteArrow>
     {
-        private struct Segment
-        {
-            public float halfHeight;
-            public float lerpT;
-            public Segment(float halfHeight, float lerpT)
-            {
-                this.halfHeight = halfHeight;
-                this.lerpT = lerpT;
-            }
-        }
         private static float _heightMultiplier = 0.0215f;
-        private static Segment[] _segments = new Segment[] { 
+        private static Segment[] _segments = new Segment[] {
             new Segment(0.00f / 2f, 0.00f * 0.99f),
             new Segment(0.66f / 2f, 0.01f * 0.97f),
             new Segment(1.00f / 2f, 0.04f * 0.94f),
@@ -30,20 +20,24 @@ namespace DCFApixels.Notes.Editors
             //new Segment(0.00f / 2f, 1.00f),
         };
 
-        [DrawGizmo(GizmoType.Active | GizmoType.NonSelected)]
-        static void DrawGizmo(NoteArrow obj, GizmoType type)
-        {
-            if (obj.Target == null)
-                return;
-
-            if(!_arrows.Contains(obj))
-                _arrows.Add(obj);
-        }
         private static HashSet<NoteArrow> _arrows = new HashSet<NoteArrow>();
         private static List<NoteArrow> _removedArrows = new List<NoteArrow>();
+
         static NoteArrowEditor()
         {
             SceneView.duringSceneGui += SceneView_duringSceneGui;
+        }
+
+
+        #region Draw Gizmo
+        [DrawGizmo(GizmoType.Active | GizmoType.NonSelected)]
+        static void DrawGizmo(NoteArrow obj, GizmoType type)
+        {
+            if (obj.Target == null) { return; }
+            if (!_arrows.Contains(obj))
+            {
+                _arrows.Add(obj);
+            }
         }
         private static void SceneView_duringSceneGui(SceneView scene)
         {
@@ -124,15 +118,19 @@ namespace DCFApixels.Notes.Editors
                 }
             }
         }
+        #endregion
 
-        public override void OnInspectorGUI()
+        #region Draw Inspector
+        protected override void DrawCustom()
         {
             var targetProp = serializedObject.FindProperty("_target");
 
             NoteArrow target = this.target as NoteArrow;
             Color color = Color.white;
             if (target.TryGetComponent(out INote inote))
+            {
                 color = inote.Color;
+            }
 
             Color defaultBackgroundColor = GUI.backgroundColor;
             GUI.backgroundColor = color;
@@ -143,10 +141,26 @@ namespace DCFApixels.Notes.Editors
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(targetProp);
             if (EditorGUI.EndChangeCheck())
+            {
                 serializedObject.ApplyModifiedProperties();
+            }
 
             GUI.backgroundColor = defaultBackgroundColor;
         }
+        #endregion
+
+        #region Utils
+        private struct Segment
+        {
+            public float halfHeight;
+            public float lerpT;
+            public Segment(float halfHeight, float lerpT)
+            {
+                this.halfHeight = halfHeight;
+                this.lerpT = lerpT;
+            }
+        }
+        #endregion
     }
 }
 #endif

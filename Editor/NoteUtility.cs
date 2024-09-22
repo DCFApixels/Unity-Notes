@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-using System.IO;
 using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
@@ -11,7 +10,7 @@ namespace DCFApixels.Notes.Editors
     internal static class NoteUtility
     {
         private static string _gizmosPath;
-        
+
 
         #region CreateLazyNote
         [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(LazyNote) + " with arrow")]

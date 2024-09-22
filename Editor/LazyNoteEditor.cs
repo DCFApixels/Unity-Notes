@@ -6,37 +6,50 @@ namespace DCFApixels.Notes.Editors
 {
     using static NotesConsts;
     [CustomEditor(typeof(LazyNote))]
-    internal class LazyNoteEditor : Editor
+    internal class LazyNoteEditor : ExtendedEditor<LazyNote>
     {
         private Rect rect = new Rect();
         private Texture2D _lineTex;
         private bool _IsInit = false;
 
-        private LazyNote Target => target as LazyNote;
+        private SerializedProperty _heightProp;
+        private SerializedProperty _textProp;
+        private SerializedProperty _drawIconProp;
+        private SerializedProperty _colorProp;
 
-        private void Init()
+        #region Init
+        protected override void OnInit()
         {
-            if (_IsInit) return;
             _lineTex = CreateTexture(2, 2, Color.black);
-            _IsInit = true;
-        }
 
-        public override void OnInspectorGUI()
+            _heightProp = FindProperty("_height");
+            _textProp = FindProperty("_text");
+            _drawIconProp = FindProperty("_drawIcon");
+            _colorProp = FindProperty("_color");
+        }
+        private static Texture2D CreateTexture(int width, int height, Color32 color32)
         {
-            Init();
+            var pixels = new Color32[width * height];
+            for (var i = 0; i < pixels.Length; ++i)
+                pixels[i] = color32;
+
+            var result = new Texture2D(width, height);
+            result.SetPixels32(pixels);
+            result.Apply();
+            return result;
+        }
+        #endregion
+
+        #region Draw
+        protected override void DrawCustom()
+        {
             Color defaultColor = GUI.color;
             Color defaultBackgroundColor = GUI.backgroundColor;
 
-            EditorGUI.BeginChangeCheck();
-            SerializedProperty heightProp = serializedObject.FindProperty("_height");
-            SerializedProperty textProp = serializedObject.FindProperty("_text");
-            SerializedProperty colorProp = serializedObject.FindProperty("_color");
-            SerializedProperty drawIconProp = serializedObject.FindProperty("_drawIcon");
-
-            Color color = colorProp.colorValue;
+            Color color = _colorProp.colorValue;
 
             Color elemcolor = NormalizeBackgroundColor(color);
-            rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + heightProp.floatValue + 5);
+            rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + _heightProp.floatValue + 5);
 
             EditorGUI.DrawRect(rect, color);
 
@@ -53,7 +66,7 @@ namespace DCFApixels.Notes.Editors
             GUIStyle gUIStyle = new GUIStyle(EditorStyles.label);
             gUIStyle.normal.textColor = new Color(0.1f, 0.1f, 0.1f, 0.2f);
 
-            drawIconProp.boolValue = EditorGUILayout.Toggle(drawIconProp.boolValue, GUILayout.MaxWidth(16));
+            _drawIconProp.boolValue = EditorGUILayout.Toggle(_drawIconProp.boolValue, GUILayout.MaxWidth(16));
             GUILayout.Label("", gUIStyle);
 
             float originalValue = EditorGUIUtility.labelWidth;
@@ -62,24 +75,21 @@ namespace DCFApixels.Notes.Editors
             GUI.backgroundColor = Color.white;
 
             GUIStyle gUIStylex = new GUIStyle(EditorStyles.helpBox);
-            heightProp.floatValue = EditorGUILayout.FloatField("↕", heightProp.floatValue, gUIStylex, GUILayout.MaxWidth(58));
-            heightProp.floatValue = Mathf.Max(MIN_NOTE_HEIGHT, heightProp.floatValue);
+            _heightProp.floatValue = EditorGUILayout.FloatField("↕", _heightProp.floatValue, gUIStylex, GUILayout.MaxWidth(58));
+            _heightProp.floatValue = Mathf.Max(MIN_NOTE_HEIGHT, _heightProp.floatValue);
             GUI.color = defaultColor;
             EditorGUIUtility.labelWidth = originalValue;
 
-            Color newColor = EditorGUILayout.ColorField(colorProp.colorValue, GUILayout.MaxWidth(40));
+            Color newColor = EditorGUILayout.ColorField(_colorProp.colorValue, GUILayout.MaxWidth(40));
             newColor.a = 1f;
-            colorProp.colorValue = newColor;
+            _colorProp.colorValue = newColor;
 
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Box(_lineTex, GUILayout.Height(1), GUILayout.ExpandWidth(true));
 
-            textProp.stringValue = EditorGUILayout.TextArea(textProp.stringValue, areastyle, GUILayout.Height(heightProp.floatValue));
+            _textProp.stringValue = EditorGUILayout.TextArea(_textProp.stringValue, areastyle, GUILayout.Height(_heightProp.floatValue));
             GUI.backgroundColor = defaultBackgroundColor;
-
-            serializedObject.ApplyModifiedProperties();
-            EditorGUI.EndChangeCheck();
         }
         public override void DrawPreview(Rect previewArea)
         {
@@ -92,17 +102,7 @@ namespace DCFApixels.Notes.Editors
             S -= S * 0.62f;
             return Color.HSVToRGB(H, S, V) * 3f;
         }
-        private static Texture2D CreateTexture(int width, int height, Color32 color32)
-        {
-            var pixels = new Color32[width * height];
-            for (var i = 0; i < pixels.Length; ++i)
-                pixels[i] = color32;
-
-            var result = new Texture2D(width, height);
-            result.SetPixels32(pixels);
-            result.Apply();
-            return result;
-        }
+        #endregion
     }
 }
 #endif
