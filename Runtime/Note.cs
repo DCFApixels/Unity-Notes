@@ -23,9 +23,9 @@ namespace DCFApixels.Notes
         [SerializeField]
         private bool _drawIcon = true;
 
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private int _authorID;
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private int _typeID;
 
         private AuthorInfo _author;
