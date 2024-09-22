@@ -28,7 +28,6 @@ namespace DCFApixels.Notes.Editors
             SceneView.duringSceneGui += SceneView_duringSceneGui;
         }
 
-
         #region Draw Gizmo
         [DrawGizmo(GizmoType.Active | GizmoType.NonSelected)]
         static void DrawGizmo(NoteArrow obj, GizmoType type)

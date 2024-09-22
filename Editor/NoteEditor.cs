@@ -14,7 +14,6 @@ namespace DCFApixels.Notes.Editors
 
         private Rect fullRect = new Rect();
         private Texture2D _lineTex;
-        private bool _IsInit = false;
 
         private GUIStyle _settingsButtonStyle;
 

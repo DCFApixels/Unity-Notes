@@ -10,7 +10,6 @@ namespace DCFApixels.Notes.Editors
     {
         private Rect rect = new Rect();
         private Texture2D _lineTex;
-        private bool _IsInit = false;
 
         private SerializedProperty _heightProp;
         private SerializedProperty _textProp;
