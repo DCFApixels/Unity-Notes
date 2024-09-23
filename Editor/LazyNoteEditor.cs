@@ -16,7 +16,21 @@ namespace DCFApixels.Notes.Editors
         private SerializedProperty _drawIconProp;
         private SerializedProperty _colorProp;
 
+        private static GUIStyle _textAreaStyle;
+
         #region Init
+        protected override bool IsStaticInit => _textAreaStyle != null;
+        protected override bool IsInit => _textProp != null;
+        protected override void OnStaticInit()
+        {
+            _textAreaStyle = new GUIStyle(EditorStyles.wordWrappedLabel);
+
+            _textAreaStyle.fontSize = 14;
+            _textAreaStyle.normal.textColor = Color.black;
+            _textAreaStyle.hover = _textAreaStyle.normal;
+            _textAreaStyle.focused = _textAreaStyle.normal;
+            _textAreaStyle.richText = true;
+        }
         protected override void OnInit()
         {
             _lineTex = CreateTexture(2, 2, Color.black);
@@ -54,19 +68,11 @@ namespace DCFApixels.Notes.Editors
 
             GUI.backgroundColor = elemcolor;
 
-            GUIStyle areastyle = new GUIStyle(EditorStyles.wordWrappedLabel);
-
-            areastyle.fontSize = 14;
-            areastyle.normal.textColor = Color.black;
-            areastyle.hover = areastyle.normal;
-            areastyle.focused = areastyle.normal;
 
             EditorGUILayout.BeginHorizontal();
-            GUIStyle gUIStyle = new GUIStyle(EditorStyles.label);
-            gUIStyle.normal.textColor = new Color(0.1f, 0.1f, 0.1f, 0.2f);
 
             _drawIconProp.boolValue = EditorGUILayout.Toggle(_drawIconProp.boolValue, GUILayout.MaxWidth(16));
-            GUILayout.Label("", gUIStyle);
+            GUILayout.Label("");
 
             float originalValue = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 14;
@@ -87,7 +93,7 @@ namespace DCFApixels.Notes.Editors
 
             GUILayout.Box(_lineTex, GUILayout.Height(1), GUILayout.ExpandWidth(true));
 
-            _textProp.stringValue = EditorGUILayout.TextArea(_textProp.stringValue, areastyle, GUILayout.Height(_heightProp.floatValue));
+            _textProp.stringValue = EditorGUILayout.TextArea(_textProp.stringValue, _textAreaStyle, GUILayout.Height(_heightProp.floatValue));
             GUI.backgroundColor = defaultBackgroundColor;
         }
         public override void DrawPreview(Rect previewArea)
