@@ -11,6 +11,7 @@ namespace DCFApixels.Notes
     {
         public string Text { get; }
         public Color Color { get; }
+        public bool DrawIcon { get; }
     }
     [AddComponentMenu(ASSET_SHORT_NAME + "/" + nameof(Note), 30)]
     internal class Note : MonoBehaviour, INote

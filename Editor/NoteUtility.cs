@@ -14,6 +14,7 @@ namespace DCFApixels.Notes.Editors
         private static string _authorNoteIconPath;
         private static string _typeNoteIconPath;
         private static GUIStyle _textStyle;
+        //private static GUIStyle _textStyle;
 
         private static bool _isInit = false;
 
@@ -24,7 +25,8 @@ namespace DCFApixels.Notes.Editors
             _noteIconPath = GetGizmosPath() + "/Runtime/Note Icon.png";
             _authorNoteIconPath = GetGizmosPath() + "/Runtime/Note Author Icon.png";
             _typeNoteIconPath = GetGizmosPath() + "/Runtime/Note Type Icon.png";
-            _textStyle = new GUIStyle(EditorStyles.whiteBoldLabel);
+            _textStyle = new GUIStyle(EditorStyles.boldLabel);
+            //_textStyle = new GUIStyle(EditorStyles.helpBox);
             _textStyle.richText = true;
             _textStyle.alignment = TextAnchor.MiddleCenter;
             _textStyle.wordWrap = true;
@@ -120,8 +122,8 @@ namespace DCFApixels.Notes.Editors
         {
             Init();
 
-            string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
-            DrawWorldLabel(note.transform.position, GetLabel(sceneNote), _textStyle);
+            string sceneText = GetSceneNote(note.Text);
+            DrawWorldLabel(note, note.transform.position, GetLabel(sceneText), _textStyle);
 
             if (note.DrawIcon)
             {
@@ -133,8 +135,8 @@ namespace DCFApixels.Notes.Editors
         {
             Init();
 
-            string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
-            DrawWorldLabel(note.transform.position, GetLabel(sceneNote), _textStyle);
+            string sceneText = GetSceneNote(note.Text);
+            DrawWorldLabel(note, note.transform.position, GetLabel(sceneText), _textStyle);
 
             if (note.DrawIcon)
             {
@@ -142,33 +144,57 @@ namespace DCFApixels.Notes.Editors
                 Gizmos.DrawIcon(note.transform.position, _typeNoteIconPath, false, note.Type.color);
             }
         }
-        private static void DrawWorldLabel(Vector3 position, GUIContent content, GUIStyle style)
+        private static void DrawWorldLabel(INote note, Vector3 position, GUIContent content, GUIStyle style)
         {
-
+            if (string.IsNullOrEmpty(content.text)) { return; }
             if (!(HandleUtility.WorldToGUIPointWithDepth(position).z < 0f))
             {
                 Handles.BeginGUI();
                 Color dc = GUI.color;
+
+                Rect rect = WorldPointToSizedRect(position, content, style, note.DrawIcon);
+                Color c = note.Color;
+                c.a = 0.3f;
+                GUI.color = c;
+                EditorGUI.DrawRect(rect, c);
                 GUI.color = Color.black;
-                GUI.Label(WorldPointToSizedRect(position, content, style), content, style);
+                GUI.Label(rect, content, style);
+
                 GUI.color = dc;
                 Handles.EndGUI();
             }
         }
-        public static Rect WorldPointToSizedRect(Vector3 position, GUIContent content, GUIStyle style)
+        public static Rect WorldPointToSizedRect(Vector3 position, GUIContent content, GUIStyle style, bool isDrawIcon)
         {
+            Vector2 cameraPoints = new Vector2(Camera.current.pixelWidth, Camera.current.pixelHeight);
+            cameraPoints = EditorGUIUtility.PixelsToPoints(cameraPoints);
+
+            float width = cameraPoints.x / 3.5f;
+
             Vector2 center = HandleUtility.WorldToGUIPointWithDepth(position);
-            Vector2 size = style.CalcSize(content);
+            float height = style.CalcHeight(content, width);
+            Vector2 size = new Vector2(width, height);
+
             Rect rect = new Rect(Vector2.zero, size);
+            if (isDrawIcon)
+            {
+                center.y += 19f + size.y / 2f;
+            }
             rect.center = center;
             return style.padding.Add(rect);
         }
-        internal static string GetSceneNote(string fullNote, bool isNeedSpacing)
+        internal static string GetSceneNote(string fullNote)
         {
-            int index = fullNote.IndexOf(NOTE_SEPARATOR);
+            int index = fullNote.IndexOf(NOTE_SEPARATOR) - 1;
             if (index < 0) { return string.Empty; }
-            string result = fullNote.Substring(0, index);
-            //return isNeedSpacing ? "\r\n" + result : result;
+            for (; index >= 0; index--)
+            {
+                if (char.IsWhiteSpace(fullNote[index]) == false)
+                {
+                    break;
+                }
+            }
+            string result = fullNote.Substring(0, index + 1);
             return result;
         }
         #endregion
