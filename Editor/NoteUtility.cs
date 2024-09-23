@@ -10,6 +10,47 @@ namespace DCFApixels.Notes.Editors
     internal static class NoteUtility
     {
         private static string _gizmosPath;
+        private static string _noteIconPath;
+        private static string _authorNoteIconPath;
+        private static string _typeNoteIconPath;
+        private static GUIStyle _textStyle;
+
+        private static bool _isInit = false;
+
+
+        private static void Init()
+        {
+            if (_isInit && _textStyle != null) { return; }
+            _noteIconPath = GetGizmosPath() + "/Runtime/Note Icon.png";
+            _authorNoteIconPath = GetGizmosPath() + "/Runtime/Note Author Icon.png";
+            _typeNoteIconPath = GetGizmosPath() + "/Runtime/Note Type Icon.png";
+            _textStyle = new GUIStyle(EditorStyles.whiteBoldLabel);
+            _textStyle.richText = true;
+            _textStyle.alignment = TextAnchor.MiddleCenter;
+            _textStyle.wordWrap = true;
+            _isInit = true;
+        }
+
+        private static GUIContent _label;
+        public static GUIContent GetLabel(string text, string tooltip)
+        {
+            if (_label == null)
+            {
+                _label = new GUIContent();
+            }
+            _label.text = text;
+            _label.tooltip = tooltip;
+            return _label;
+        }
+        public static GUIContent GetLabel(string text)
+        {
+            if (_label == null)
+            {
+                _label = new GUIContent();
+            }
+            _label.text = text;
+            return _label;
+        }
 
         #region CreateLazyNote
         [MenuItem("GameObject/" + ASSET_SHORT_NAME + "/Create " + nameof(LazyNote) + " with arrow")]
@@ -77,32 +118,58 @@ namespace DCFApixels.Notes.Editors
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
         private static void DrawLazyNote(LazyNote note, GizmoType gizmoType)
         {
-            if (note.DrawIcon)
-            {
-                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Icon.png", false, note.Color);
-            }
+            Init();
 
             string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
-            Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
+            DrawWorldLabel(note.transform.position, GetLabel(sceneNote), _textStyle);
+
+            if (note.DrawIcon)
+            {
+                Gizmos.DrawIcon(note.transform.position, _noteIconPath, false, note.Color);
+            }
         }
         [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
         private static void DrawNote(Note note, GizmoType gizmoType)
         {
-            if (note.DrawIcon)
-            {
-                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Author Icon.png", false, note.Author.color);
-                Gizmos.DrawIcon(note.transform.position, GetGizmosPath() + "/Runtime/Note Type Icon.png", false, note.Type.color);
-            }
+            Init();
 
             string sceneNote = GetSceneNote(note.Text, note.DrawIcon);
-            Handles.Label(note.transform.position, sceneNote, EditorStyles.whiteBoldLabel);
+            DrawWorldLabel(note.transform.position, GetLabel(sceneNote), _textStyle);
+
+            if (note.DrawIcon)
+            {
+                Gizmos.DrawIcon(note.transform.position, _authorNoteIconPath, false, note.Author.color);
+                Gizmos.DrawIcon(note.transform.position, _typeNoteIconPath, false, note.Type.color);
+            }
+        }
+        private static void DrawWorldLabel(Vector3 position, GUIContent content, GUIStyle style)
+        {
+
+            if (!(HandleUtility.WorldToGUIPointWithDepth(position).z < 0f))
+            {
+                Handles.BeginGUI();
+                Color dc = GUI.color;
+                GUI.color = Color.black;
+                GUI.Label(WorldPointToSizedRect(position, content, style), content, style);
+                GUI.color = dc;
+                Handles.EndGUI();
+            }
+        }
+        public static Rect WorldPointToSizedRect(Vector3 position, GUIContent content, GUIStyle style)
+        {
+            Vector2 center = HandleUtility.WorldToGUIPointWithDepth(position);
+            Vector2 size = style.CalcSize(content);
+            Rect rect = new Rect(Vector2.zero, size);
+            rect.center = center;
+            return style.padding.Add(rect);
         }
         internal static string GetSceneNote(string fullNote, bool isNeedSpacing)
         {
             int index = fullNote.IndexOf(NOTE_SEPARATOR);
-            if (index < 0) return string.Empty;
+            if (index < 0) { return string.Empty; }
             string result = fullNote.Substring(0, index);
-            return isNeedSpacing ? "\r\n" + result : result;
+            //return isNeedSpacing ? "\r\n" + result : result;
+            return result;
         }
         #endregion
 
