@@ -68,7 +68,7 @@ namespace DCFApixels.Notes
             get
             {
 #if UNITY_EDITOR
-                if (_author == null) UpdateRefs();
+                if (_author.IsNullOrDummy() == false) UpdateRefs();
                 return _author;
 #else
                 return null;
@@ -87,7 +87,7 @@ namespace DCFApixels.Notes
             get
             {
 #if UNITY_EDITOR
-                if (_type == null) UpdateRefs();
+                if (_type.IsNullOrDummy() == false) UpdateRefs();
                 return _type;
 #else
                 return null;
@@ -118,7 +118,7 @@ namespace DCFApixels.Notes
             get
             {
 #if UNITY_EDITOR
-                return _type.color;
+                return Type.color;
 #else
                 return default;
 #endif

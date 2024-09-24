@@ -123,6 +123,8 @@ namespace DCFApixels.Notes.Editors
     }
     public static class NotesSettingsExtensions
     {
+        public static bool IsNullOrDummy(this AuthorInfo self) => self == null || self == DUMMY_AUTHOR;
+        public static bool IsNullOrDummy(this NoteTypeInfo self) => self == null || self == DUMMY_NOTE_TYPE;
         public static bool IsDummy(this AuthorInfo self) => self == DUMMY_AUTHOR;
         public static bool IsDummy(this NoteTypeInfo self) => self == DUMMY_NOTE_TYPE;
     }
