@@ -140,8 +140,8 @@ namespace DCFApixels.Notes.Editors
 
             if (note.DrawIcon)
             {
-                Gizmos.DrawIcon(note.transform.position, _authorNoteIconPath, false, note.Author.color);
-                Gizmos.DrawIcon(note.transform.position, _typeNoteIconPath, false, note.Type.color);
+                Gizmos.DrawIcon(note.transform.position, _authorNoteIconPath, false, note.AuthorColor);
+                Gizmos.DrawIcon(note.transform.position, _typeNoteIconPath, false, note.Color);
             }
         }
         private static void DrawWorldLabel(INote note, Vector3 position, GUIContent content, GUIStyle style)

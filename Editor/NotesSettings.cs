@@ -8,6 +8,7 @@ namespace DCFApixels.Notes.Editors
 {
     using static NotesConsts;
     [FilePath(AUTHOR + "/NotesSettings", FilePathAttribute.Location.ProjectFolder)]
+    [InitializeOnLoad]
     internal class NotesSettings : ScriptableSingleton<NotesSettings>, ISerializationCallbackReceiver
     {
         internal const int NO_INIT_ID = 0;
@@ -47,7 +48,9 @@ namespace DCFApixels.Notes.Editors
         public AuthorInfo GetAuthorInfoOrDummy(int id)
         {
             if (TryGetAuthorInfo(id, out var result))
+            {
                 return result;
+            }
             return DUMMY_AUTHOR;
         }
 
@@ -65,7 +68,9 @@ namespace DCFApixels.Notes.Editors
         public NoteTypeInfo GetNoteTypeInfoOrDummy(int id)
         {
             if (TryGetTypeInfo(id, out var result))
+            {
                 return result;
+            }
             return DUMMY_NOTE_TYPE;
         }
 

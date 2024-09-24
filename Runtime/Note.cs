@@ -68,7 +68,7 @@ namespace DCFApixels.Notes
             get
             {
 #if UNITY_EDITOR
-                if (_author.IsNullOrDummy() == false) UpdateRefs();
+                if (_author == null) { UpdateRefs(); }
                 return _author;
 #else
                 return null;
@@ -87,7 +87,7 @@ namespace DCFApixels.Notes
             get
             {
 #if UNITY_EDITOR
-                if (_type.IsNullOrDummy() == false) UpdateRefs();
+                if (_type == null) { UpdateRefs(); }
                 return _type;
 #else
                 return null;
@@ -113,6 +113,17 @@ namespace DCFApixels.Notes
             }
         }
 
+        public Color AuthorColor
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return Author.color;
+#else
+                return Color.black;
+#endif
+            }
+        }
         public Color Color
         {
             get
@@ -120,7 +131,7 @@ namespace DCFApixels.Notes
 #if UNITY_EDITOR
                 return Type.color;
 #else
-                return default;
+                return Color.black;
 #endif
             }
         }

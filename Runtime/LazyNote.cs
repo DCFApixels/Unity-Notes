@@ -48,7 +48,7 @@ namespace DCFApixels.Notes
 #if UNITY_EDITOR
                 return _color;
 #else
-                return default;
+                return Color.black;
 #endif
             }
         }
