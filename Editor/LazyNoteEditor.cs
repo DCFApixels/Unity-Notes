@@ -8,7 +8,7 @@ namespace DCFApixels.Notes.Editors
     [CustomEditor(typeof(LazyNote))]
     internal class LazyNoteEditor : ExtendedEditor<LazyNote>
     {
-        private Rect rect = new Rect();
+        private Rect _fullRect = new Rect();
         private Texture2D _lineTex;
 
         private SerializedProperty _heightProp;
@@ -62,9 +62,9 @@ namespace DCFApixels.Notes.Editors
             Color color = _colorProp.colorValue;
 
             Color elemcolor = NormalizeBackgroundColor(color);
-            rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + _heightProp.floatValue + 5);
+            _fullRect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight * 2 + _heightProp.floatValue + 5);
 
-            EditorGUI.DrawRect(rect, color);
+            EditorGUI.DrawRect(_fullRect, color);
 
             GUI.backgroundColor = elemcolor;
 
@@ -96,9 +96,10 @@ namespace DCFApixels.Notes.Editors
             _textProp.stringValue = EditorGUILayout.TextArea(_textProp.stringValue, _textAreaStyle, GUILayout.Height(_heightProp.floatValue));
             GUI.backgroundColor = defaultBackgroundColor;
         }
+
         public override void DrawPreview(Rect previewArea)
         {
-            rect = previewArea;
+            _fullRect = previewArea;
             base.DrawPreview(previewArea);
         }
         private static Color NormalizeBackgroundColor(Color color)

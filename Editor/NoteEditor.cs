@@ -147,9 +147,8 @@ namespace DCFApixels.Notes.Editors
 
             GUI.backgroundColor = Color.white;
 
-            GUILayout.Label("Author:", GUILayout.Width(44));
-
             GUI.color = Color.black;
+            GUILayout.Label("Author:", GUILayout.Width(44));
             GUI.color = headerColor;
             if (GUILayout.Button(author.IsDummy() ? "-" : author.name, EditorStyles.popup))
             {

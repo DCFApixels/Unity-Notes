@@ -122,6 +122,9 @@ namespace DCFApixels.Notes.Editors
         #region Draw Inspector
         protected override void DrawCustom()
         {
+            Color defaultBackgroundColor = GUI.backgroundColor;
+            Color defaultColor = GUI.color;
+
             var targetProp = serializedObject.FindProperty("_target");
 
             NoteArrow target = this.target as NoteArrow;
@@ -131,19 +134,26 @@ namespace DCFApixels.Notes.Editors
                 color = inote.Color;
             }
 
-            Color defaultBackgroundColor = GUI.backgroundColor;
             GUI.backgroundColor = color;
 
             Rect rect = new Rect(0, 0, EditorGUIUtility.currentViewWidth, EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2 + 9);
             EditorGUI.DrawRect(rect, color);
 
+
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(targetProp);
+
+            GUI.color = Color.black;
+            EditorGUILayout.LabelField(NoteUtility.GetLabel(targetProp.displayName));
+
+            GUI.color = Color.white;
+            Rect r = GUILayoutUtility.GetLastRect();
+            EditorGUI.PropertyField(r, targetProp, NoteUtility.GetLabel(" "));
             if (EditorGUI.EndChangeCheck())
             {
                 serializedObject.ApplyModifiedProperties();
             }
 
+            GUI.color = defaultColor;
             GUI.backgroundColor = defaultBackgroundColor;
         }
         #endregion
