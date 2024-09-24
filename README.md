@@ -33,7 +33,7 @@
 
 
 <p align="center">
-<img src="https://github.com/DCFApixels/Unity-Notes/assets/99481254/e8e3e6a9-9d35-48db-b786-45554fa3e08e" width="600" >
+<img src="https://github.com/user-attachments/assets/e6a33020-e847-4cca-b1ca-14ebcaa03156" width="600" >
 <br>
 Notes on Scene View for designers.
 </p>
